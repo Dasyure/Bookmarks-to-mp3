@@ -1,15 +1,22 @@
 import json
-from get_json import get_json
+from get_json import get_json, find_json_folder
+import requests
 
 file = get_json()
-root = file["roots"]
-bookmark_bar = root["bookmark_bar"]
-print(bookmark_bar)
-print(len(bookmark_bar))
+folder_path = ["Youtube stuff (songs mainly)"]
+folder = find_json_folder(file['roots']['bookmark_bar'], folder_path)
 
+for bookmark in folder['children']:
+    print(bookmark)
 
-print(bookmark_bar["date_added"]+'\n')
+# print(len(folder))
 
-
-for i in bookmark_bar:
-    print(i)
+# # STRUCTURE:
+# children
+# date_added
+# date_modified
+# guid
+# id
+# name
+# sync_transaction_version
+# type
