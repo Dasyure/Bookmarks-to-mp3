@@ -35,43 +35,65 @@ def download_audio(url, directory):
     stream.download(directory)
 
 
-def read_url_list(f):
+def print_download_status(success, URL):
+    '''
+    Description: After attempt to download is complete, this function prints out
+                 the success status of the attempt.
+    Params:
+      (success): Boolean, 1 if succeeded, 0 if failed.
+      (URL): String, the URL that was downloaded, or attempted to do so.
+    '''
+    if success:
+        print(f"\033[1;32;49m Success: {URL}") # green
+    elif ('youtube' in URL.split('.')):
+        print(f"\033[1;31;49m Failed: {URL}") # red
+    else:
+        print(f"\033[1;35;49m Not_YT_Link: {URL}") # purple
+
+
+def read_url_list(f, f_out):
     '''
     Description: Reads a list of URLs and converts each URL to an audio file.
     Params:
       (f): File object, referring to the file with the list of URLs.
+      (f_out): File object, referring to the file with the list of
+               failed Youtube URLs.
     '''
+    DIRECTORY = argv[1]
     success = True
+    retry_limit = 3
     for line in f:
-        DIRECTORY = argv[1]
         URL = line
-        try:
-            download_audio(URL, DIRECTORY)
-            success = True
-        except:
-            success = False
-            if (len(URL) > 32) and (URL[12:19] == 'youtube'): # if it's a yt link
-                with open(output_file, 'a') as output_file:
-                    output_file.write(URL)
-            else:
-                pass
-        if success:
-            print(f"\033[1;32;49m {URL}")   # green url printed
-        else:
-            print(f"\033[1;31;49m {URL}")   # red url printed
+        for i in range(0,retry_limit): # retry download three times, if download fails
+            try:
+                download_audio(URL, DIRECTORY)
+                success = True
+                break # no need to retry, download succeeded
+            except:
+                success = False
+                # if there's a yt link and it's the last retry
+                if 'youtube' in URL.split('.') and i == (retry_limit - 1):
+                    f_out.write(URL + '\n')
+                elif 'youtube' in URL.split('.'):
+                    pass # retry download
+                else:
+                    break # no need to retry, not a yt link
+        print_download_status(success, URL)
 
 
 if __name__ == '__main__':
     if len(list(argv)) != 2:
         raise Exception(f'Usage: python {argv[0]} name_of_directory')
 
-    input_file = 'url_list.txt'
-    output_file = 'url_cant_open.txt'
+    input_file = 'url_list.txt' # list of URLs to be converted
+    output_file = 'url_cant_open.txt' # for failed youtube URLs
 
     f = open(input_file, 'r')
-    read_url_list(f)
-    f.close()
+    f_out = open(output_file, 'a')
+    read_url_list(f, f_out)
 
+    f.close()
+    f_out.close()
 
 # import json
 # from get_json import get_json, find_json_folder
