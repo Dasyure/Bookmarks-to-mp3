@@ -1,5 +1,8 @@
 from pytube import YouTube
 from sys import argv
+import subprocess
+import time
+import os
 
 def get_audio_stream_hq(streams):
     '''
@@ -21,6 +24,24 @@ def get_audio_stream_hq(streams):
         hq_stream = stream if (s_kbps > kbps) else hq_stream
     return hq_stream
 
+def convert_webm_flac(directory):
+    '''
+    Description: Converts all the downloaded webm files into a flac files.
+    Params:
+      (directory): Where to get the downloaded webm files from.
+    '''
+    os.chdir(directory)
+
+    for file in os.listdir():
+        new_file = file[:-4] + "flac"
+        cmds = ['ffmpeg.exe', '-i', file, new_file]
+        p = subprocess.Popen(cmds)
+        time.sleep(5)
+        p.kill()
+        print(f"\033[1;32;49m Converted {file} to {new_file}") # green
+
+    os.chdir('..')
+
 
 def download_audio(url, directory):
     '''
@@ -28,6 +49,7 @@ def download_audio(url, directory):
         directory.
     Params:
       (url): The youtube link as an URL.
+      (directory): Where to store the downloaded webm file.
     '''
     yt = YouTube(url)
     streams = yt.streams.filter(only_audio=True) # List of audio streams
@@ -35,20 +57,20 @@ def download_audio(url, directory):
     stream.download(directory)
 
 
-def print_download_status(success, URL):
+def print_download_status(success, url):
     '''
     Description: After attempt to download is complete, this function prints out
                  the success status of the attempt.
     Params:
       (success): Boolean, 1 if succeeded, 0 if failed.
-      (URL): String, the URL that was downloaded, or attempted to do so.
+      (url): String, the url that was downloaded, or attempted to do so.
     '''
     if success:
-        print(f"\033[1;32;49m Success: {URL}") # green
-    elif ('youtube' in URL.split('.')):
-        print(f"\033[1;31;49m Failed: {URL}") # red
+        print(f"\033[1;32;49m Success: {url}") # green
+    elif ('youtube' in url.split('.')):
+        print(f"\033[1;31;49m Failed: {url}") # red
     else:
-        print(f"\033[1;35;49m Not_YT_Link: {URL}") # purple
+        print(f"\033[1;35;49m Not_YT_Link: {url}") # purple
 
 
 def read_url_list(f, f_out):
@@ -59,26 +81,27 @@ def read_url_list(f, f_out):
       (f_out): File object, referring to the file with the list of
                failed Youtube URLs.
     '''
-    DIRECTORY = argv[1]
+    directory = argv[1]
     success = True
     retry_limit = 3
     for line in f:
-        URL = line
+        url = line
         for i in range(0,retry_limit): # retry download three times, if download fails
             try:
-                download_audio(URL, DIRECTORY)
+                download_audio(url, directory)
                 success = True
                 break # no need to retry, download succeeded
             except:
                 success = False
                 # if there's a yt link and it's the last retry
-                if 'youtube' in URL.split('.') and i == (retry_limit - 1):
-                    f_out.write(URL + '\n')
-                elif 'youtube' in URL.split('.'):
+                if 'youtube' in url.split('.') and i == (retry_limit - 1):
+                    f_out.write(url + '\n')
+                elif 'youtube' in url.split('.'):
                     pass # retry download
                 else:
                     break # no need to retry, not a yt link
-        print_download_status(success, URL)
+        print_download_status(success, url)
+    convert_webm_flac(directory)
 
 
 if __name__ == '__main__':
