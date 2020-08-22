@@ -9,7 +9,11 @@ folder = find_json_folder(file['roots']['bookmark_bar'], folder_path)
 for bookmark in folder['children']:
     print(bookmark)
 
-# print(len(folder))
+# Export URL list to text file
+
+# Use youtube-dl to download each URL
+
+
 
 # # STRUCTURE:
 # children
