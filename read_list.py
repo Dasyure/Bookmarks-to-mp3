@@ -48,7 +48,7 @@ def read_url_list(f, f_out, directory, output_file):
                 # if there's a yt link and it's the last retry
                 if 'youtube' in url.split('.') and i == (retry_limit - 1):
                     f_out.write(url + "\n")
-                    f_out.close()
+                    f_out.close() # this is so this command isn't buffered
                     f_out = open(output_file, 'a')
                 elif 'youtube' in url.split('.'):
                     pass # retry download
