@@ -1,4 +1,4 @@
-""" This program downloads the audio from a Youtube link and then converts it
+''' This program downloads the audio from a Youtube link and then converts it
     to the desired audio format.
 
 The function "read_url_list" reads in the URLs from the first text file
@@ -29,7 +29,7 @@ FILE STRUCTURE:
     -> convert_audio_type
 
 Created: 2020-08-22
-"""
+'''
 from sys import argv
 from read_list import read_url_list
 from convert import convert_audio_type
