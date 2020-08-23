@@ -43,7 +43,8 @@ if __name__ == '__main__':
     directory = argv[1]
 
     f = open(input_file, 'r')
-    f_out = open(output_file, 'a')
+    buffered = 0
+    f_out = open(output_file, 'a', buffered)
     read_url_list(f, f_out, directory) # URLs > Webm
     convert_audio_type(f_out, directory) #Webm > Flac
 
