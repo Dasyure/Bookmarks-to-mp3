@@ -15,7 +15,7 @@ and add ffmpeg to PATH, for example:
     ```python main.py New_Folder```
 
 ## Important
-1) This file uses ffmpeg installed locally from: https://ffmpeg.org/download.html
+1) This file uses ffmpeg installed from: https://ffmpeg.org/download.html
 2) You must add ffmpeg to your PATH, as shown above.
 3) On Windows, the executable is named ```ffmpeg.exe```, if on MAC or Linux you
    may have to change the variable ```ffmpeg_name``` in ```convert.py```.
