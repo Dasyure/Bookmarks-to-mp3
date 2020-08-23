@@ -34,7 +34,7 @@ def read_url_list(f, f_out, directory):
       (directory): Where to store the downloaded webm file.
     '''
     success = True
-    retry_limit = 3
+    retry_limit = 4
     for line in f:
         url = line
         for i in range(0, retry_limit): # retry download three times, if download fails
