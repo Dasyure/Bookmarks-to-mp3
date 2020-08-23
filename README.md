@@ -1,7 +1,7 @@
 # Bookmarks to MP3
 This program downloads the audio from a Youtube link and then converts it to the desired audio format.
 
-## Instructions:
+## Instructions
 1. After installing python, navigate to the directory with ```main.py``` and type:
 
     ```pip install -r requirements.txt```
@@ -14,13 +14,13 @@ and add ffmpeg to PATH, for example:
 
     ```python main.py New_Folder```
 
-## Important:
+## Important
 1) This file uses ffmpeg installed locally from: https://ffmpeg.org/download.html
 2) You must add ffmpeg to your PATH, as shown above.
 3) On Windows, the executable is named ```ffmpeg.exe```, if on MAC or Linux you
    may have to change the variable ```ffmpeg_name``` in ```convert.py```.
 
-## File Structure:
+## File Structure
     main.py
     -> read_url_list
        -> print_download_status
