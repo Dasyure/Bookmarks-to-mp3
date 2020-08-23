@@ -45,7 +45,7 @@ if __name__ == '__main__':
     f = open(input_file, 'r')
     f_out = open(output_file, 'a')
     read_url_list(f, f_out, directory) # URLs > Webm
-    convert_audio_type(directory) #Webm > Flac
+    convert_audio_type(f_out, directory) #Webm > Flac
 
     f.close()
     f_out.close()
