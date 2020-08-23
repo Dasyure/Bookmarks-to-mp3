@@ -18,13 +18,14 @@ from os import chdir, path
 from subprocess import Popen
 from time import sleep
 
-def convert_audio_type(f_out, directory):
+def convert_audio_type(f_out, directory, output_file):
     '''
     Description: Converts all the downloaded webm files into a flac files.
     Params:
         (f_out): File object, referring to the file with the list of
                 failed Youtube URLs.
         (directory): Where to get the downloaded webm files from.
+        (output_file): Text file listing failed URLs.
     '''
     chdir(directory)
 
@@ -45,6 +46,8 @@ def convert_audio_type(f_out, directory):
             print()
         except:
             f_out.write(file + '\n')
+            f_out.close()
+            f_out = open(output_file, 'a')
             print(f"\033[1;31;49m Failed_Convert: {file} to {new_file}") # red
 
     chdir('..')

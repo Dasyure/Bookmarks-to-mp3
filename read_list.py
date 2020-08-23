@@ -24,7 +24,7 @@ def print_download_status(success, url):
         print(f"\033[1;35;49m Not_YT_Link: {url}") # purple
 
 
-def read_url_list(f, f_out, directory):
+def read_url_list(f, f_out, directory, output_file):
     '''
     Description: Reads a list of URLs and converts each URL to an audio file.
     Params:
@@ -32,9 +32,10 @@ def read_url_list(f, f_out, directory):
       (f_out): File object, referring to the file with the list of
                failed Youtube URLs.
       (directory): Where to store the downloaded webm file.
+      (output_file): Text file listing failed URLs.
     '''
     success = True
-    retry_limit = 4
+    retry_limit = 3
     for line in f:
         url = line
         for i in range(0, retry_limit): # retry download three times, if download fails
@@ -46,7 +47,9 @@ def read_url_list(f, f_out, directory):
                 success = False
                 # if there's a yt link and it's the last retry
                 if 'youtube' in url.split('.') and i == (retry_limit - 1):
-                    f_out.write(url + '\n')
+                    f_out.write(url + "\n")
+                    f_out.close()
+                    f_out = open(output_file, 'a')
                 elif 'youtube' in url.split('.'):
                     pass # retry download
                 else:
