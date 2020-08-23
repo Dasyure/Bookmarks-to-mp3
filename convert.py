@@ -13,7 +13,8 @@ IMPORTANT:
    may have to change the variable "ffmpeg_name".
 '''
 
-from os import chdir, listdir
+from glob import glob
+from os import chdir, path
 from subprocess import Popen
 from time import sleep
 
@@ -26,8 +27,10 @@ def convert_audio_type(directory):
     chdir(directory)
 
     ffmpeg_name = 'ffmpeg.exe'
+    all_files = glob("*")
+    all_files.sort(key=path.getmtime) # sorts the files by date
     new_audio_type = "flac"
-    for file in listdir():
+    for file in all_files:
         new_file = file.split(".")[0] + "." + new_audio_type
         cmds = [ffmpeg_name, '-i', file, new_file]
         p = Popen(cmds)
